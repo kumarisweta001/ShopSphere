@@ -3,24 +3,29 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import ProductListView from '../ProductListView.vue'
 import { useProductStore } from '../../stores/productStore'
+// import * as vueRouter from 'vue-router'
+
+vi.mock('vue-router', () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn() })),
+}))
 
 describe('ProductListView', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
+    vi.clearAllMocks()
   })
 
   it('renders products and calls fetchProducts', async () => {
     const productStore = useProductStore()
     const fake = [
-      { id: 1, title: 'A', price: 1 },
-      { id: 2, title: 'B', price: 2 },
+      { id: "1", title: 'A', price: 1 },
+      { id: "2", title: 'B', price: 2 },
     ]
-    productStore.products = { value: fake } as any
+    productStore.products = fake
     productStore.fetchProducts = vi.fn()
 
     const wrapper = mount(ProductListView, {
       global: {
-        plugins: [createPinia()],
         stubs: ['ProductCard', 'CartSummary', 'router-link'],
       },
     })

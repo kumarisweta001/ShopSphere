@@ -1,11 +1,19 @@
 import { mount } from '@vue/test-utils'
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { setActivePinia, createPinia } from 'pinia'
 import CartView from '../CartView.vue'
 import { useCartStore } from '../../stores/cartStore'
+// import * as vueRouter from 'vue-router'
+
+vi.mock('vue-router', () => ({
+  useRouter: vi.fn(() => ({ push: vi.fn() })),
+}))
 
 describe('CartView', () => {
-  beforeEach(() => setActivePinia(createPinia()))
+  beforeEach(() => {
+    setActivePinia(createPinia())
+    vi.clearAllMocks()
+  })
 
   it('renders items and total', async () => {
     const store = useCartStore()
@@ -13,7 +21,7 @@ describe('CartView', () => {
     store.addToCart({ id: 'x', title: 'X', price: 3 } as any)
 
     const wrapper = mount(CartView, {
-      global: { plugins: [createPinia()], stubs: ['router-link'] },
+      global: { stubs: ['router-link'] },
     })
 
     expect(wrapper.text()).toContain('Your Cart')

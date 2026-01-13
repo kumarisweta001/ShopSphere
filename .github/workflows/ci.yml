@@ -24,7 +24,7 @@ jobs:
         run: npm ci
 
       - name: Run ESLint
-        run: npm run lint
+        run: npx eslint . --max-warnings=0
 
   unit-tests:
     name: Unit Tests
@@ -43,7 +43,7 @@ jobs:
         run: npm ci
 
       - name: Run unit tests
-        run: npm run test:unit
+        run: npm run test:unit -- --run
 
   e2e-tests:
     name: E2E Tests
